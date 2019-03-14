@@ -1,13 +1,13 @@
 const path = require('path');
 
 module.exports = {
-    entry: './front/src/main.ts',
+    entry: './front/main.ts',
     mode: 'development',
     devtool: 'source-map',
     module: {
         rules: [
             {
-                include: /^front\/src\/.*\.tsx?$/,
+                include: /^front\/.*\.tsx?$/,
                 exclude: /node_modules/,
                 enforce: 'pre',
                 use: {
@@ -19,7 +19,7 @@ module.exports = {
                 },
             },
             {
-                include: /^front\/src\/.*\.tsx?$/,
+                include: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: 'ts-loader',
             }

@@ -15,8 +15,6 @@ export async function register(state: mage.core.IState, username: string, passwo
     await promisify(mage.auth.login)(state, username, password);
 
     mage.logger.debug('Logged in!');
-
-    return id;
 }
 
 export function setup(_state: mage.core.IState, callback: any) {

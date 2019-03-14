@@ -18,6 +18,6 @@ mage.useModules([
 mage.useApplicationModules();
 
 // Should this go here?
-mage.core.httpServer.serveFolder("/game", "./front_build", "index.html");
+mage.core.httpServer.serveFolder("/front", "./front_build", "index.html");
 
 export = mage;
