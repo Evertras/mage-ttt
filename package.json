@@ -1,0 +1,36 @@
+{
+  "name": "mage-sandbox",
+  "description": "",
+  "version": "0.0.1",
+  "repository": "",
+  "author": "",
+  "license": "Private",
+  "main": "./lib/index.ts",
+  "scripts": {
+    "help": "     echo 'Display help information (this screen)' &&   npm run",
+    "mage": "     echo 'Run the mage binary'  &&                     ts-mage",
+    "develop": "  echo 'Run MAGE in development mode' &&             npm run mage",
+    "start": "    echo 'Start MAGE as a daemon' &&                   ts-mage start",
+    "stop": "     echo 'Stop the MAGE daemon' &&                     ts-mage stop",
+    "restart": "  echo 'Restart the MAGE daemon' &&                  ts-mage restart",
+    "reload": "   echo 'Reload the MAGE daemon' &&                   ts-mage reload",
+    "status": "   echo 'Check the MAGE daemon status' &&             ts-mage status",
+    "config:server": "    echo 'Show the compiled MAGE configuration' &&                         ts-mage config:server",
+    "config:client": "    echo 'Show the compiled MAGE configuration used by clients' &&         ts-mage config:client --app game",
+    "archivist:create": " echo 'Create archivist vaults (based on current configuration)' &&     ts-mage archivist:create",
+    "archivist:migrate": "echo 'Migrate archivist vaults (based on current configuration)' &&    ts-mage archivist:migrate",
+    "archivist:drop": "   echo 'Drop the archivist vaults (based on current configuration)' &&   ts-mage archivist:drop",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "^8 || ^9"
+  },
+  "dependencies": {
+    "@types/es6-promisify": "^6.0.0",
+    "@types/node": "^8.0.57",
+    "es6-promisify": "^6.0.1",
+    "mage": "1.6.0",
+    "ts-node": "^4.0.1",
+    "typescript": "^2.6.2"
+  }
+}
