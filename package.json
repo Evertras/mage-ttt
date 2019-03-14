@@ -20,17 +20,23 @@
     "archivist:create": " echo 'Create archivist vaults (based on current configuration)' &&     ts-mage archivist:create",
     "archivist:migrate": "echo 'Migrate archivist vaults (based on current configuration)' &&    ts-mage archivist:migrate",
     "archivist:drop": "   echo 'Drop the archivist vaults (based on current configuration)' &&   ts-mage archivist:drop",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "tslint --project . --fix"
   },
   "engines": {
     "node": "^8 || ^9"
   },
   "dependencies": {
-    "@types/es6-promisify": "^6.0.0",
     "@types/node": "^8.0.57",
-    "es6-promisify": "^6.0.1",
     "mage": "1.6.0",
     "ts-node": "^4.0.1",
     "typescript": "^2.6.2"
+  },
+  "devDependencies": {
+    "ts-loader": "^5.3.3",
+    "tslint": "^5.14.0",
+    "tslint-loader": "^3.5.4",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
   }
 }
