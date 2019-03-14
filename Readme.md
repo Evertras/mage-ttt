@@ -1,4 +1,4 @@
-# mage-sandbox
+# mage-ttt
 
 ## Introduction
 

@@ -1,6 +1,13 @@
 <html>
     <head>
         <title>Mage Tic Tac Toe</title>
+        <style>
+            #board tr td {
+                width: 100px;
+                height: 100px;
+                border: 2px solid black;
+            }
+        </style>
     </head>
     <body>
         <span id="loading" class="loading">
@@ -17,6 +24,28 @@
                 <input name="password" type="password" placeholder="password">
                 <button type="button" id="loginButton">Log in Also Totally Secure ThisIsFine.jpg</button>
             </form>
+        </span>
+
+        <span id="game">
+            <h1>Tic Tac Toe Oh Man</h1>
+
+            <table id="board">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
         </span>
 
         <script src="game.js">
