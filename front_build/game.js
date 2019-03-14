@@ -98,27 +98,44 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/index.js");
 mage.setEndpoint('http://localhost:8080');
-function hideWhileLoading() {
-    const toHide = document.getElementsByClassName('loaded');
-    for (const el of toHide) {
-        el.style.display = 'none';
+var State;
+(function (State) {
+    State[State["Loading"] = 0] = "Loading";
+    State[State["Loaded"] = 1] = "Loaded";
+    State[State["LoggedIn"] = 2] = "LoggedIn";
+})(State || (State = {}));
+function adjustVisibility(state) {
+    let toHide = [];
+    let toShow = [];
+    console.log(state);
+    switch (state) {
+        case State.Loading:
+            toHide = ['login', 'game'];
+            toShow = ['loading'];
+            break;
+        case State.Loaded:
+            toHide = ['loading', 'game'];
+            toShow = ['login'];
+            break;
+        case State.LoggedIn:
+            toHide = ['loading', 'login'];
+            toShow = ['game'];
+            break;
     }
-    const toShow = document.getElementsByClassName('loading');
-    for (const el of toShow) {
-        el.style.display = 'inherit';
+    for (const id of toHide) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = 'none';
+        }
+    }
+    for (const id of toShow) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = 'inherit';
+        }
     }
 }
-function showAfterLoaded() {
-    const toHide = document.getElementsByClassName('loading');
-    for (const el of toHide) {
-        el.style.display = 'none';
-    }
-    const toShow = document.getElementsByClassName('loaded');
-    for (const el of toShow) {
-        el.style.display = 'inherit';
-    }
-}
-hideWhileLoading();
+adjustVisibility(State.Loading);
 const registerButton = document.getElementById('registerButton');
 registerButton.onclick = () => {
     console.log('clicked');
@@ -136,7 +153,7 @@ mage.configure(async (err) => {
         console.error(err);
     }
     console.log(mage);
-    showAfterLoaded();
+    adjustVisibility(State.Loaded);
 });
 
 

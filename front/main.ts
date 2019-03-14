@@ -2,32 +2,54 @@ import * as mage from 'mage-sdk-js';
 
 mage.setEndpoint('http://localhost:8080');
 
-// This is dumb but dead simple
-function hideWhileLoading() {
-    const toHide = document.getElementsByClassName('loaded');
-    for (const el of toHide) {
-        (<HTMLElement> el).style.display = 'none';
+enum State {
+    Loading,
+    Loaded,
+    LoggedIn,
+}
+
+// This is really dumb but dead simple for this little exercise
+function adjustVisibility(state: State) {
+    let toHide: string[] = [];
+    let toShow: string[] = [];
+
+    console.log(state);
+
+    switch (state) {
+        case State.Loading:
+            toHide = ['login', 'game'];
+            toShow = ['loading'];
+            break;
+
+        case State.Loaded:
+            toHide = ['loading', 'game'];
+            toShow = ['login'];
+            break;
+
+        case State.LoggedIn:
+            toHide = ['loading', 'login'];
+            toShow = ['game'];
+            break;
     }
 
-    const toShow = document.getElementsByClassName('loading');
-    for (const el of toShow) {
-        (<HTMLElement> el).style.display = 'inherit';
+    for (const id of toHide) {
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.style.display = 'none';
+        }
+    }
+
+    for (const id of toShow) {
+        const el = document.getElementById(id);
+
+        if (el) {
+            el.style.display = 'inherit';
+        }
     }
 }
 
-function showAfterLoaded() {
-    const toHide = document.getElementsByClassName('loading');
-    for (const el of toHide) {
-        (<HTMLElement> el).style.display = 'none';
-    }
-
-    const toShow = document.getElementsByClassName('loaded');
-    for (const el of toShow) {
-        (<HTMLElement> el).style.display = 'inherit';
-    }
-}
-
-hideWhileLoading();
+adjustVisibility(State.Loading);
 
 const registerButton = document.getElementById('registerButton') as HTMLButtonElement;
 
@@ -50,5 +72,5 @@ mage.configure(async (err: Error) => {
     }
 
     console.log(mage);
-    showAfterLoaded();
+    adjustVisibility(State.Loaded);
 });
