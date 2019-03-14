@@ -11,7 +11,7 @@ function hideWhileLoading() {
 
     const toShow = document.getElementsByClassName('loading');
     for (const el of toShow) {
-        (<HTMLElement> el).style.display = 'block';
+        (<HTMLElement> el).style.display = 'inherit';
     }
 }
 
@@ -23,7 +23,7 @@ function showAfterLoaded() {
 
     const toShow = document.getElementsByClassName('loaded');
     for (const el of toShow) {
-        (<HTMLElement> el).style.display = 'block';
+        (<HTMLElement> el).style.display = 'inherit';
     }
 }
 

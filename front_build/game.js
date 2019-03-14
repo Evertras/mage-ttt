@@ -105,7 +105,7 @@ function hideWhileLoading() {
     }
     const toShow = document.getElementsByClassName('loading');
     for (const el of toShow) {
-        el.style.display = 'block';
+        el.style.display = 'inherit';
     }
 }
 function showAfterLoaded() {
@@ -115,7 +115,7 @@ function showAfterLoaded() {
     }
     const toShow = document.getElementsByClassName('loaded');
     for (const el of toShow) {
-        el.style.display = 'block';
+        el.style.display = 'inherit';
     }
 }
 hideWhileLoading();
