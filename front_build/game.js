@@ -131,6 +131,7 @@ function adjustVisibility(state) {
 }
 adjustVisibility(State.Loading);
 const registerButton = document.getElementById('registerButton');
+const loginButton = document.getElementById('loginButton');
 registerButton.onclick = async () => {
     try {
         const usernameInput = document.getElementById('registerUser');
@@ -140,6 +141,21 @@ registerButton.onclick = async () => {
             return;
         }
         await mage.players.register(usernameInput.value, passwordInput.value);
+        adjustVisibility(State.LoggedIn);
+    }
+    catch (err) {
+        console.error(err);
+    }
+};
+loginButton.onclick = async () => {
+    try {
+        const usernameInput = document.getElementById('user');
+        const passwordInput = document.getElementById('password');
+        if (!usernameInput || !passwordInput) {
+            console.error('Missing user or password');
+            return;
+        }
+        await mage.players.login(usernameInput.value, passwordInput.value);
         adjustVisibility(State.LoggedIn);
     }
     catch (err) {

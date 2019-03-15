@@ -5,6 +5,7 @@ declare module 'mage-sdk-js' {
 
     module players {
         function register(username: string, password: string): Promise<any>;
+        function login(username: string, password: string): Promise<any>;
     }
 
     module session {
