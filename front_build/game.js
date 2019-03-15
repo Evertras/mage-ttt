@@ -124,15 +124,27 @@ function adjustVisibility(state) {
             el.style.display = 'none';
         }
     }
-    const el = document.getElementById(toShow);
-    if (el) {
-        el.style.display = 'inherit';
+    const showElement = document.getElementById(toShow);
+    if (showElement) {
+        showElement.style.display = 'inherit';
     }
 }
 adjustVisibility(State.Loading);
 const registerButton = document.getElementById('registerButton');
-registerButton.onclick = () => {
-    console.log('clicked');
+registerButton.onclick = async () => {
+    try {
+        const usernameInput = document.getElementById('registerUser');
+        const passwordInput = document.getElementById('registerPassword');
+        if (!usernameInput || !passwordInput) {
+            console.error('Missing registerUser or registerPassword');
+            return;
+        }
+        await mage.players.register(usernameInput.value, passwordInput.value);
+        adjustVisibility(State.LoggedIn);
+    }
+    catch (err) {
+        console.error(err);
+    }
 };
 mage.configure(async (err) => {
     if (err) {
@@ -140,12 +152,6 @@ mage.configure(async (err) => {
         return;
     }
     await mage.setupModule('session', __webpack_require__(/*! mage-sdk-js.session */ "./node_modules/mage-sdk-js.session/index.js"));
-    try {
-        await mage.players.register('test2', 'testpass');
-    }
-    catch (err) {
-        console.error(err);
-    }
     console.log(mage);
     adjustVisibility(State.Loaded);
 });

@@ -17,13 +17,14 @@
         <span id="login" style="display: none">
             <form>
                 <h1>Register</h1>
-                <input name="registeruser" type="text" placeholder="user">
-                <input name="registerpassword" type="password" placeholder="password">
+                <!-- Yes, id instead of name, easier for this janky javascript... don't do this in real code -->
+                <input id="registerUser" type="text" placeholder="user">
+                <input id="registerPassword" type="password" placeholder="password">
                 <button type="button" id="registerButton">Register Totally Secure It's Fine</button>
 
                 <h1>Log in</h1>
-                <input name="user" type="text" placeholder="user">
-                <input name="password" type="password" placeholder="password">
+                <input id="user" type="text" placeholder="user">
+                <input id="password" type="password" placeholder="password">
                 <button type="button" id="loginButton">Log in Also Totally Secure ThisIsFine.jpg</button>
             </form>
         </span>

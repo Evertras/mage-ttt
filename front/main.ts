@@ -46,8 +46,23 @@ adjustVisibility(State.Loading);
 
 const registerButton = document.getElementById('registerButton') as HTMLButtonElement;
 
-registerButton.onclick = () => {
-    console.log('clicked');
+registerButton.onclick = async () => {
+
+    try {
+        const usernameInput = document.getElementById('registerUser') as HTMLInputElement;
+        const passwordInput = document.getElementById('registerPassword') as HTMLInputElement;
+
+        if (!usernameInput || !passwordInput) {
+            console.error('Missing registerUser or registerPassword');
+            return;
+        }
+
+        await mage.players.register(usernameInput.value, passwordInput.value);
+
+        adjustVisibility(State.LoggedIn);
+    } catch (err) {
+        console.error(err);
+    }
 };
 
 mage.configure(async (err: Error) => {
@@ -57,12 +72,6 @@ mage.configure(async (err: Error) => {
     }
 
     await mage.setupModule('session', require('mage-sdk-js.session'));
-
-    try {
-        await mage.players.register('test2', 'testpass');
-    } catch (err) {
-        console.error(err);
-    }
 
     console.log(mage);
     adjustVisibility(State.Loaded);
