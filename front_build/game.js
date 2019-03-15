@@ -105,34 +105,28 @@ var State;
     State[State["LoggedIn"] = 2] = "LoggedIn";
 })(State || (State = {}));
 function adjustVisibility(state) {
-    let toHide = [];
-    let toShow = [];
-    console.log(state);
+    const all = ['loading', 'login', 'game'];
+    let toShow = '';
     switch (state) {
         case State.Loading:
-            toHide = ['login', 'game'];
-            toShow = ['loading'];
+            toShow = 'loading';
             break;
         case State.Loaded:
-            toHide = ['loading', 'game'];
-            toShow = ['login'];
+            toShow = 'login';
             break;
         case State.LoggedIn:
-            toHide = ['loading', 'login'];
-            toShow = ['game'];
+            toShow = 'game';
             break;
     }
-    for (const id of toHide) {
+    for (const id of all) {
         const el = document.getElementById(id);
-        if (el) {
+        if (el && el.id !== toShow) {
             el.style.display = 'none';
         }
     }
-    for (const id of toShow) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.style.display = 'inherit';
-        }
+    const el = document.getElementById(toShow);
+    if (el) {
+        el.style.display = 'inherit';
     }
 }
 adjustVisibility(State.Loading);

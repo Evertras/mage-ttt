@@ -10,42 +10,35 @@ enum State {
 
 // This is really dumb but dead simple for this little exercise
 function adjustVisibility(state: State) {
-    let toHide: string[] = [];
-    let toShow: string[] = [];
-
-    console.log(state);
+    const all = ['loading', 'login', 'game'];
+    let toShow: string = '';
 
     switch (state) {
         case State.Loading:
-            toHide = ['login', 'game'];
-            toShow = ['loading'];
+            toShow = 'loading';
             break;
 
         case State.Loaded:
-            toHide = ['loading', 'game'];
-            toShow = ['login'];
+            toShow = 'login';
             break;
 
         case State.LoggedIn:
-            toHide = ['loading', 'login'];
-            toShow = ['game'];
+            toShow = 'game';
             break;
     }
 
-    for (const id of toHide) {
+    for (const id of all) {
         const el = document.getElementById(id);
 
-        if (el) {
+        if (el && el.id !== toShow) {
             el.style.display = 'none';
         }
     }
 
-    for (const id of toShow) {
-        const el = document.getElementById(id);
+    const el = document.getElementById(toShow);
 
-        if (el) {
-            el.style.display = 'inherit';
-        }
+    if (el) {
+        el.style.display = 'inherit';
     }
 }
 
