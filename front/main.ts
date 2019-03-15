@@ -35,10 +35,10 @@ function adjustVisibility(state: State) {
         }
     }
 
-    const el = document.getElementById(toShow);
+    const showElement = document.getElementById(toShow);
 
-    if (el) {
-        el.style.display = 'inherit';
+    if (showElement) {
+        showElement.style.display = 'inherit';
     }
 }
 
