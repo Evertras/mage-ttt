@@ -43,3 +43,10 @@ exports.auth = <mage.archivist.ITopic> {
     volatileVault: {},
   },
 };
+
+exports.player = <mage.archivist.ITopic> {
+  index: ['username'],
+  vaults: {
+    volatileVault: {},
+  },
+};

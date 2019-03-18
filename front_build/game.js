@@ -142,6 +142,8 @@ registerButton.onclick = async () => {
         }
         await mage.players.register(usernameInput.value, passwordInput.value);
         adjustVisibility(State.LoggedIn);
+        const data = await mage.players.getData();
+        console.log(data);
     }
     catch (err) {
         console.error(err);
@@ -157,6 +159,8 @@ loginButton.onclick = async () => {
         }
         await mage.players.login(usernameInput.value, passwordInput.value);
         adjustVisibility(State.LoggedIn);
+        const data = await mage.players.getData();
+        console.log(data);
     }
     catch (err) {
         console.error(err);
