@@ -1,4 +1,5 @@
 import * as mage from 'mage-sdk-js';
+import { playerMeta } from './playerData';
 
 export function setupSearchButtons() {
     const createButton = document.getElementById('createGameButton') as HTMLButtonElement;
@@ -11,14 +12,58 @@ export function setupSearchButtons() {
 
 export async function updateOpenGames() {
     const open = await mage.game.getOpen();
-    const ul = document.getElementById('opengames') as HTMLUListElement;
-    ul.innerHTML = '';
+    const ulMine = document.getElementById('opengamesmine') as HTMLUListElement;
+    const ulOthers = document.getElementById('opengamesothers') as HTMLUListElement;
 
-    let list = '';
+    ulMine.innerHTML = '';
+    ulOthers.innerHTML = '';
 
-    for (const g of open) {
-        list += '<li>' + g.gameId + ' (' + g.playerX + ')</li>';
+    const mine = open.filter((g) => g.playerX === playerMeta.username);
+    const others = open.filter((g) => g.playerX !== playerMeta.username);
+
+    for (const g of mine) {
+        const item = document.createElement('li');
+        const button = document.createElement('button') as HTMLButtonElement;
+        const text = document.createElement('span') as HTMLSpanElement;
+
+        function genClick(name: string): () => void {
+            return () => {
+                console.log(name);
+            };
+        }
+
+        button.onclick = genClick(g.gameId);
+        button.textContent = 'Delete';
+
+        item.appendChild(button);
+
+        text.textContent = g.gameId;
+
+        item.appendChild(text);
+
+        ulMine.appendChild(item);
     }
 
-    ul.innerHTML = list;
+    for (const g of others) {
+        const item = document.createElement('li');
+        const button = document.createElement('button') as HTMLButtonElement;
+        const text = document.createElement('span') as HTMLSpanElement;
+
+        function genClick(name: string): () => void {
+            return () => {
+                console.log(name);
+            };
+        }
+
+        button.onclick = genClick(g.gameId);
+        button.textContent = 'Join';
+
+        item.appendChild(button);
+
+        text.textContent = g.gameId + ' (created by ' + g.playerX + ')';
+
+        item.appendChild(text);
+
+        ulOthers.appendChild(item);
+    }
 }

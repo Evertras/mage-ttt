@@ -1,8 +1,11 @@
 import * as mage from 'mage-sdk-js';
+import { playerMeta } from './playerData';
 import { adjustVisibility, State } from './states';
 
-async function loggedIn() {
+async function loggedIn(username: string) {
     await adjustVisibility(State.LoggedIn);
+
+    playerMeta.username = username;
 }
 
 export function setupLoginButtons() {
@@ -21,7 +24,7 @@ export function setupLoginButtons() {
 
             await mage.players.register(usernameInput.value, passwordInput.value);
 
-            await loggedIn();
+            await loggedIn(usernameInput.value);
         } catch (err) {
             console.error(err);
         }
@@ -39,7 +42,7 @@ export function setupLoginButtons() {
 
             await mage.players.login(usernameInput.value, passwordInput.value);
 
-            await loggedIn();
+            await loggedIn(usernameInput.value);
         } catch (err) {
             console.error(err);
         }

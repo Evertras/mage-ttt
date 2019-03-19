@@ -5,8 +5,8 @@ import { adjustVisibility, State } from './states';
 
 mage.setEndpoint('http://localhost:8080');
 
-window.onload = () => {
-    adjustVisibility(State.Loading);
+window.onload = async () => {
+    await adjustVisibility(State.Loading);
 
     setupLoginButtons();
     setupSearchButtons();

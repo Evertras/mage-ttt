@@ -97,9 +97,11 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/index.js");
+const playerData_1 = __webpack_require__(/*! ./playerData */ "./front/playerData.ts");
 const states_1 = __webpack_require__(/*! ./states */ "./front/states.ts");
-async function loggedIn() {
+async function loggedIn(username) {
     await states_1.adjustVisibility(states_1.State.LoggedIn);
+    playerData_1.playerMeta.username = username;
 }
 function setupLoginButtons() {
     const registerButton = document.getElementById('registerButton');
@@ -113,7 +115,7 @@ function setupLoginButtons() {
                 return;
             }
             await mage.players.register(usernameInput.value, passwordInput.value);
-            await loggedIn();
+            await loggedIn(usernameInput.value);
         }
         catch (err) {
             console.error(err);
@@ -128,7 +130,7 @@ function setupLoginButtons() {
                 return;
             }
             await mage.players.login(usernameInput.value, passwordInput.value);
-            await loggedIn();
+            await loggedIn(usernameInput.value);
         }
         catch (err) {
             console.error(err);
@@ -155,8 +157,8 @@ const login_1 = __webpack_require__(/*! ./login */ "./front/login.ts");
 const search_1 = __webpack_require__(/*! ./search */ "./front/search.ts");
 const states_1 = __webpack_require__(/*! ./states */ "./front/states.ts");
 mage.setEndpoint('http://localhost:8080');
-window.onload = () => {
-    states_1.adjustVisibility(states_1.State.Loading);
+window.onload = async () => {
+    await states_1.adjustVisibility(states_1.State.Loading);
     login_1.setupLoginButtons();
     search_1.setupSearchButtons();
     mage.configure(async (err) => {
@@ -172,6 +174,27 @@ window.onload = () => {
 
 /***/ }),
 
+/***/ "./front/playerData.ts":
+/*!*****************************!*\
+  !*** ./front/playerData.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class PlayerMeta {
+    constructor() {
+        this.username = '';
+    }
+}
+exports.PlayerMeta = PlayerMeta;
+exports.playerMeta = new PlayerMeta();
+
+
+/***/ }),
+
 /***/ "./front/search.ts":
 /*!*************************!*\
   !*** ./front/search.ts ***!
@@ -183,6 +206,7 @@ window.onload = () => {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/index.js");
+const playerData_1 = __webpack_require__(/*! ./playerData */ "./front/playerData.ts");
 function setupSearchButtons() {
     const createButton = document.getElementById('createGameButton');
     createButton.onclick = async () => {
@@ -193,13 +217,44 @@ function setupSearchButtons() {
 exports.setupSearchButtons = setupSearchButtons;
 async function updateOpenGames() {
     const open = await mage.game.getOpen();
-    const ul = document.getElementById('opengames');
-    ul.innerHTML = '';
-    let list = '';
-    for (const g of open) {
-        list += '<li>' + g.gameId + ' (' + g.playerX + ')</li>';
+    const ulMine = document.getElementById('opengamesmine');
+    const ulOthers = document.getElementById('opengamesothers');
+    ulMine.innerHTML = '';
+    ulOthers.innerHTML = '';
+    const mine = open.filter((g) => g.playerX === playerData_1.playerMeta.username);
+    const others = open.filter((g) => g.playerX !== playerData_1.playerMeta.username);
+    for (const g of mine) {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        const text = document.createElement('span');
+        function genClick(name) {
+            return () => {
+                console.log(name);
+            };
+        }
+        button.onclick = genClick(g.gameId);
+        button.textContent = 'Delete';
+        item.appendChild(button);
+        text.textContent = g.gameId;
+        item.appendChild(text);
+        ulMine.appendChild(item);
     }
-    ul.innerHTML = list;
+    for (const g of others) {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        const text = document.createElement('span');
+        function genClick(name) {
+            return () => {
+                console.log(name);
+            };
+        }
+        button.onclick = genClick(g.gameId);
+        button.textContent = 'Join';
+        item.appendChild(button);
+        text.textContent = g.gameId + ' (created by ' + g.playerX + ')';
+        item.appendChild(text);
+        ulOthers.appendChild(item);
+    }
 }
 exports.updateOpenGames = updateOpenGames;
 

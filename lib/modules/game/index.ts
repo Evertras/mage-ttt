@@ -37,10 +37,6 @@ export async function create(state: mage.core.IState, name: string) {
 }
 
 export async function getOpen(state: mage.core.IState) {
-    if (!state.session) {
-        throw new Error('No session found');
-    }
-
     if (!state.archivist) {
         throw new Error('No archivist found');
     }
@@ -48,7 +44,6 @@ export async function getOpen(state: mage.core.IState) {
     const listGame = promisify(state.archivist.list.bind(state.archivist, 'game'));
 
     const existing = await listGame({ playerO: '' }) as IGameIndex[];
-    const username = state.session.meta.username;
 
-    return existing.filter((g) => g.playerX !== username);
+    return existing;
 }
