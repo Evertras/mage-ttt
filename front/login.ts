@@ -3,9 +3,13 @@ import { playerMeta } from './playerData';
 import { adjustVisibility, State } from './states';
 
 async function loggedIn(username: string) {
-    await adjustVisibility(State.LoggedIn);
-
     playerMeta.username = username;
+
+    const mdUsername = document.getElementById('mdusername') as HTMLElement;
+
+    mdUsername.textContent = 'Logged in as: ' + username;
+
+    await adjustVisibility(State.LoggedIn);
 }
 
 export function setupLoginButtons() {

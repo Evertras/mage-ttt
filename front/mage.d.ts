@@ -23,7 +23,9 @@ declare module 'mage-sdk-js' {
 
     module game {
         function create(name?: string): Promise<any>;
+        function del(name?: string): Promise<any>;
         function getOpen(): Promise<IGameMeta[]>;
+        function getActive(): Promise<IGameMeta[]>;
     }
 
     module session {

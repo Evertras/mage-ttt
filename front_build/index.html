@@ -13,6 +13,9 @@
     </head>
     <body>
         <!-- This whole page is all hilariously prototype, do not take seriously or reuse anywhere -->
+        <div id="metadata">
+            <span id="mdusername"></span>
+        </div>
         <span id="loading">
             <h1>Loading...</h1>
         </span>
@@ -33,11 +36,18 @@
         </span>
 
         <span id="search" style="display: none">
+            <h1>Active Games</h1>
+            <ul id="activegames"></ul>
+            <hr />
+
             <h1>My Games</h1>
             <ul id="opengamesmine"></ul>
+            <hr />
 
             <h1>Open Games</h1>
             <ul id="opengamesothers"></ul>
+            <hr />
+
             <button type="button" id="createGameButton">Create Game</button>
         </span>
 

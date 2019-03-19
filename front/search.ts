@@ -12,11 +12,14 @@ export function setupSearchButtons() {
 
 export async function updateOpenGames() {
     const open = await mage.game.getOpen();
+    const active = await mage.game.getActive();
     const ulMine = document.getElementById('opengamesmine') as HTMLUListElement;
     const ulOthers = document.getElementById('opengamesothers') as HTMLUListElement;
+    const ulActive = document.getElementById('activegames') as HTMLUListElement;
 
     ulMine.innerHTML = '';
     ulOthers.innerHTML = '';
+    ulActive.innerHTML = '';
 
     const mine = open.filter((g) => g.playerX === playerMeta.username);
     const others = open.filter((g) => g.playerX !== playerMeta.username);
@@ -27,8 +30,9 @@ export async function updateOpenGames() {
         const text = document.createElement('span') as HTMLSpanElement;
 
         function genClick(name: string): () => void {
-            return () => {
-                console.log(name);
+            return async () => {
+                await mage.game.del(name);
+                await updateOpenGames();
             };
         }
 
@@ -51,7 +55,7 @@ export async function updateOpenGames() {
 
         function genClick(name: string): () => void {
             return () => {
-                console.log(name);
+                console.log('Joining ' + name);
             };
         }
 
@@ -65,5 +69,28 @@ export async function updateOpenGames() {
         item.appendChild(text);
 
         ulOthers.appendChild(item);
+    }
+
+    for (const g of active) {
+        const item = document.createElement('li');
+        const button = document.createElement('button') as HTMLButtonElement;
+        const text = document.createElement('span') as HTMLSpanElement;
+
+        function genClick(name: string): () => void {
+            return () => {
+                console.log('Playing ' + name);
+            };
+        }
+
+        button.onclick = genClick(g.gameId);
+        button.textContent = 'Play';
+
+        item.appendChild(button);
+
+        text.textContent = g.gameId;
+
+        item.appendChild(text);
+
+        ulActive.appendChild(item);
     }
 }

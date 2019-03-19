@@ -100,8 +100,10 @@ const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/
 const playerData_1 = __webpack_require__(/*! ./playerData */ "./front/playerData.ts");
 const states_1 = __webpack_require__(/*! ./states */ "./front/states.ts");
 async function loggedIn(username) {
-    await states_1.adjustVisibility(states_1.State.LoggedIn);
     playerData_1.playerMeta.username = username;
+    const mdUsername = document.getElementById('mdusername');
+    mdUsername.textContent = 'Logged in as: ' + username;
+    await states_1.adjustVisibility(states_1.State.LoggedIn);
 }
 function setupLoginButtons() {
     const registerButton = document.getElementById('registerButton');
@@ -217,10 +219,13 @@ function setupSearchButtons() {
 exports.setupSearchButtons = setupSearchButtons;
 async function updateOpenGames() {
     const open = await mage.game.getOpen();
+    const active = await mage.game.getActive();
     const ulMine = document.getElementById('opengamesmine');
     const ulOthers = document.getElementById('opengamesothers');
+    const ulActive = document.getElementById('activegames');
     ulMine.innerHTML = '';
     ulOthers.innerHTML = '';
+    ulActive.innerHTML = '';
     const mine = open.filter((g) => g.playerX === playerData_1.playerMeta.username);
     const others = open.filter((g) => g.playerX !== playerData_1.playerMeta.username);
     for (const g of mine) {
@@ -228,8 +233,9 @@ async function updateOpenGames() {
         const button = document.createElement('button');
         const text = document.createElement('span');
         function genClick(name) {
-            return () => {
-                console.log(name);
+            return async () => {
+                await mage.game.del(name);
+                await updateOpenGames();
             };
         }
         button.onclick = genClick(g.gameId);
@@ -245,7 +251,7 @@ async function updateOpenGames() {
         const text = document.createElement('span');
         function genClick(name) {
             return () => {
-                console.log(name);
+                console.log('Joining ' + name);
             };
         }
         button.onclick = genClick(g.gameId);
@@ -254,6 +260,22 @@ async function updateOpenGames() {
         text.textContent = g.gameId + ' (created by ' + g.playerX + ')';
         item.appendChild(text);
         ulOthers.appendChild(item);
+    }
+    for (const g of active) {
+        const item = document.createElement('li');
+        const button = document.createElement('button');
+        const text = document.createElement('span');
+        function genClick(name) {
+            return () => {
+                console.log('Playing ' + name);
+            };
+        }
+        button.onclick = genClick(g.gameId);
+        button.textContent = 'Play';
+        item.appendChild(button);
+        text.textContent = g.gameId;
+        item.appendChild(text);
+        ulActive.appendChild(item);
     }
 }
 exports.updateOpenGames = updateOpenGames;
