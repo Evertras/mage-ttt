@@ -50,3 +50,10 @@ exports.player = <mage.archivist.ITopic> {
     volatileVault: {},
   },
 };
+
+exports.game = <mage.archivist.ITopic> {
+  index: ['gameId', 'playerX', 'playerO'],
+  vaults: {
+    volatileVault: {},
+  },
+};

@@ -86,6 +86,60 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./front/login.ts":
+/*!************************!*\
+  !*** ./front/login.ts ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/index.js");
+const states_1 = __webpack_require__(/*! ./states */ "./front/states.ts");
+async function loggedIn() {
+    await states_1.adjustVisibility(states_1.State.LoggedIn);
+}
+function setupLoginButtons() {
+    const registerButton = document.getElementById('registerButton');
+    const loginButton = document.getElementById('loginButton');
+    registerButton.onclick = async () => {
+        try {
+            const usernameInput = document.getElementById('registerUser');
+            const passwordInput = document.getElementById('registerPassword');
+            if (!usernameInput || !passwordInput) {
+                console.error('Missing registerUser or registerPassword');
+                return;
+            }
+            await mage.players.register(usernameInput.value, passwordInput.value);
+            await loggedIn();
+        }
+        catch (err) {
+            console.error(err);
+        }
+    };
+    loginButton.onclick = async () => {
+        try {
+            const usernameInput = document.getElementById('user');
+            const passwordInput = document.getElementById('password');
+            if (!usernameInput || !passwordInput) {
+                console.error('Missing user or password');
+                return;
+            }
+            await mage.players.login(usernameInput.value, passwordInput.value);
+            await loggedIn();
+        }
+        catch (err) {
+            console.error(err);
+        }
+    };
+}
+exports.setupLoginButtons = setupLoginButtons;
+
+
+/***/ }),
+
 /***/ "./front/main.ts":
 /*!***********************!*\
   !*** ./front/main.ts ***!
@@ -97,15 +151,81 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/index.js");
+const login_1 = __webpack_require__(/*! ./login */ "./front/login.ts");
+const search_1 = __webpack_require__(/*! ./search */ "./front/search.ts");
+const states_1 = __webpack_require__(/*! ./states */ "./front/states.ts");
 mage.setEndpoint('http://localhost:8080');
+window.onload = () => {
+    states_1.adjustVisibility(states_1.State.Loading);
+    login_1.setupLoginButtons();
+    search_1.setupSearchButtons();
+    mage.configure(async (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        await mage.setupModule('session', __webpack_require__(/*! mage-sdk-js.session */ "./node_modules/mage-sdk-js.session/index.js"));
+        await states_1.adjustVisibility(states_1.State.Loaded);
+    });
+};
+
+
+/***/ }),
+
+/***/ "./front/search.ts":
+/*!*************************!*\
+  !*** ./front/search.ts ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const mage = __webpack_require__(/*! mage-sdk-js */ "./node_modules/mage-sdk-js/index.js");
+function setupSearchButtons() {
+    const createButton = document.getElementById('createGameButton');
+    createButton.onclick = async () => {
+        await mage.game.create();
+        await updateOpenGames();
+    };
+}
+exports.setupSearchButtons = setupSearchButtons;
+async function updateOpenGames() {
+    const open = await mage.game.getOpen();
+    const ul = document.getElementById('opengames');
+    ul.innerHTML = '';
+    let list = '';
+    for (const g of open) {
+        list += '<li>' + g.gameId + ' (' + g.playerX + ')</li>';
+    }
+    ul.innerHTML = list;
+}
+exports.updateOpenGames = updateOpenGames;
+
+
+/***/ }),
+
+/***/ "./front/states.ts":
+/*!*************************!*\
+  !*** ./front/states.ts ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const search_1 = __webpack_require__(/*! ./search */ "./front/search.ts");
 var State;
 (function (State) {
     State[State["Loading"] = 0] = "Loading";
     State[State["Loaded"] = 1] = "Loaded";
     State[State["LoggedIn"] = 2] = "LoggedIn";
-})(State || (State = {}));
-function adjustVisibility(state) {
-    const all = ['loading', 'login', 'game'];
+    State[State["Playing"] = 3] = "Playing";
+})(State = exports.State || (exports.State = {}));
+async function adjustVisibility(state) {
+    const all = ['loading', 'login', 'search', 'game'];
     let toShow = '';
     switch (state) {
         case State.Loading:
@@ -115,6 +235,10 @@ function adjustVisibility(state) {
             toShow = 'login';
             break;
         case State.LoggedIn:
+            toShow = 'search';
+            await search_1.updateOpenGames();
+            break;
+        case State.Playing:
             toShow = 'game';
             break;
     }
@@ -129,52 +253,7 @@ function adjustVisibility(state) {
         showElement.style.display = 'inherit';
     }
 }
-adjustVisibility(State.Loading);
-const registerButton = document.getElementById('registerButton');
-const loginButton = document.getElementById('loginButton');
-registerButton.onclick = async () => {
-    try {
-        const usernameInput = document.getElementById('registerUser');
-        const passwordInput = document.getElementById('registerPassword');
-        if (!usernameInput || !passwordInput) {
-            console.error('Missing registerUser or registerPassword');
-            return;
-        }
-        await mage.players.register(usernameInput.value, passwordInput.value);
-        adjustVisibility(State.LoggedIn);
-        const data = await mage.players.getData();
-        console.log(data);
-    }
-    catch (err) {
-        console.error(err);
-    }
-};
-loginButton.onclick = async () => {
-    try {
-        const usernameInput = document.getElementById('user');
-        const passwordInput = document.getElementById('password');
-        if (!usernameInput || !passwordInput) {
-            console.error('Missing user or password');
-            return;
-        }
-        await mage.players.login(usernameInput.value, passwordInput.value);
-        adjustVisibility(State.LoggedIn);
-        const data = await mage.players.getData();
-        console.log(data);
-    }
-    catch (err) {
-        console.error(err);
-    }
-};
-mage.configure(async (err) => {
-    if (err) {
-        console.error(err);
-        return;
-    }
-    await mage.setupModule('session', __webpack_require__(/*! mage-sdk-js.session */ "./node_modules/mage-sdk-js.session/index.js"));
-    console.log(mage);
-    adjustVisibility(State.Loaded);
-});
+exports.adjustVisibility = adjustVisibility;
 
 
 /***/ }),

@@ -11,17 +11,43 @@ export enum Result {
     O,
 }
 
+function genRandomName() {
+    const len = 16;
+    const baseA = 65;
+
+    let name = '';
+
+    for (let i = 0; i < len; ++i) {
+        const r = Math.floor(Math.random() * 26) + baseA;
+
+        name += String.fromCharCode(r);
+    }
+
+    return name;
+}
+
 export class TicTacToe {
+    private id: string;
     private squares: Player[][];
     private turn: Player = Player.X;
     private turnCount: number = 1;
 
-    constructor() {
+    constructor(id?: string) {
+        if (id) {
+            this.id = id;
+        } else {
+            this.id = genRandomName();
+        }
+
         this.squares = [
             [Player.None, Player.None, Player.None],
             [Player.None, Player.None, Player.None],
             [Player.None, Player.None, Player.None],
         ];
+    }
+
+    public getId(): string {
+        return this.id;
     }
 
     public getTurn(): Player {

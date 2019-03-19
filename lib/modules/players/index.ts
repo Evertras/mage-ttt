@@ -12,7 +12,6 @@ export async function register(state: mage.core.IState, username: string, passwo
     const id = await r(state, username, password, options);
 
     state.archivist.set('player', { username }, <IPlayerData> {
-        GameIDs: [],
         Wins: 0,
         Losses: 0,
     });

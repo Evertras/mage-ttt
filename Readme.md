@@ -2,7 +2,7 @@
 
 ## Introduction
 
-
+Playing with Mage by making a simple Tic Tac Toe game service.
 
 ## Requirements
 

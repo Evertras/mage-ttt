@@ -1,8 +1,13 @@
 // I REALLY don't like putting this here as a duplicate definition, but do it until we figure out TS adventures
 declare interface IPlayerData {
-    GameIDs: string[];
     Wins: number;
     Losses: number;
+}
+
+declare interface IGameMeta {
+    gameId: string;
+    playerX: string;
+    playerO: string;
 }
 
 declare module 'mage-sdk-js' {
@@ -14,6 +19,11 @@ declare module 'mage-sdk-js' {
         function register(username: string, password: string): Promise<any>;
         function login(username: string, password: string): Promise<any>;
         function getData(): Promise<IPlayerData>;
+    }
+
+    module game {
+        function create(name?: string): Promise<any>;
+        function getOpen(): Promise<IGameMeta[]>;
     }
 
     module session {

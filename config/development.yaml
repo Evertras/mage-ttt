@@ -17,4 +17,5 @@ server:
         # What the world will see us as (a full base URL)
         expose: "http://127.0.0.1:8080/"
         bind: "http://127.0.0.1:8080"
+    shutdownGracePeriod: 1
 

@@ -51,6 +51,7 @@ server:
     # Configure which transports to use and in which order to attempt (websocket, longpolling, shortpolling)
     msgStream:
         detect:
+            - websocket
             - longpolling
 
     # Set workers to boolean true to have as many workers as this machine has cores, or a number
@@ -87,7 +88,8 @@ archivist:
             type: memory
 
     # When doing "list" operations, we will attempt each mentioned vault until successful
-    listOrder: []
+    listOrder:
+        - volatileVault
 
     # When doing "get" operations, we will attempt each mentioned vault until successful
     readOrder:
