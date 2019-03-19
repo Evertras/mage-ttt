@@ -2,6 +2,8 @@ import mage = require('mage');
 import { promisify } from 'util';
 import { TicTacToe } from '../../game/tictactoe';
 
+const gameTopic = 'game';
+
 interface IGameIndex extends mage.archivist.IArchivistIndex {
     gameId: string;
     playerX: string;
@@ -18,11 +20,9 @@ export async function createGame(state: mage.core.IState, name: string) {
     }
 
     const ttt = new TicTacToe(name);
-    const username = state.session.meta.username;
+    const listGame = promisify(state.archivist.list.bind(state.archivist, gameTopic));
 
-    const listGame = promisify(state.archivist.list.bind(state.archivist, 'game'));
-
-    const alreadyCreated = await listGame({ playerX: username });
+    const alreadyCreated = await listGame({ playerX: state.actorId });
 
     // TODO: config this
     if (alreadyCreated.length >= 5) {
@@ -36,10 +36,10 @@ export async function createGame(state: mage.core.IState, name: string) {
     }
 
     state.archivist.set(
-        'game',
+        gameTopic,
         <IGameIndex> {
             gameId: ttt.getId(),
-            playerX: username,
+            playerX: state.actorId,
             playerO: '',
         }, ttt);
 }
@@ -53,8 +53,8 @@ export async function del(state: mage.core.IState, name: string) {
         throw new Error('No archivist found');
     }
 
-    const find = promisify(state.archivist.list.bind(state.archivist, 'game'));
-    const existing = await find({ gameId: name, playerX: state.session.meta.username }) as IGameIndex[];
+    const find = promisify(state.archivist.list.bind(state.archivist, gameTopic));
+    const existing = await find({ gameId: name, playerX: state.actorId }) as IGameIndex[];
 
     if (!existing || existing.length === 0) {
         throw new Error('No game found owned by player');
@@ -62,7 +62,7 @@ export async function del(state: mage.core.IState, name: string) {
 
     mage.logger.debug('Deleting', JSON.stringify(existing[0]));
 
-    state.archivist.del('game', existing[0]);
+    state.archivist.del(gameTopic, existing[0]);
 }
 
 export async function getOpen(state: mage.core.IState) {
@@ -70,7 +70,7 @@ export async function getOpen(state: mage.core.IState) {
         throw new Error('No archivist found');
     }
 
-    const listGame = promisify(state.archivist.list.bind(state.archivist, 'game'));
+    const listGame = promisify(state.archivist.list.bind(state.archivist, gameTopic));
 
     const existing = await listGame({ playerO: '' }) as IGameIndex[];
 
@@ -86,10 +86,45 @@ export async function getActive(state: mage.core.IState) {
         throw new Error('No session found');
     }
 
-    const listGame = promisify(state.archivist.list.bind(state.archivist, 'game'));
-    const username = state.session.meta.username;
+    const listGame = promisify(state.archivist.list.bind(state.archivist, gameTopic));
 
-    const existing = await listGame({ playerX: username }) as IGameIndex[];
+    const existing = await listGame({ playerX: state.actorId }) as IGameIndex[];
 
     return existing.filter((g) => g.playerO !== '');
+}
+
+export async function join(state: mage.core.IState, name: string) {
+    if (!state.archivist) {
+        throw new Error('No archivist found');
+    }
+
+    if (!state.session) {
+        throw new Error('No session found');
+    }
+
+    if (!state.actorId) {
+        throw new Error('No actorId found');
+    }
+
+    const scanGame = promisify(state.archivist.scan.bind(state.archivist, gameTopic));
+
+    const scanned = await scanGame({ gameId: name });
+
+    if (!scanned || scanned.length === 0) {
+        throw new Error('Game not found');
+    }
+
+    const gameIndex = scanned[0][0];
+    const gameData = scanned[0][1];
+
+    state.archivist.set(
+        gameTopic,
+        <IGameIndex> { gameId: name, playerX: gameIndex.playerX, playerO: state.actorId },
+        gameData);
+
+    state.emit(state.actorId, 'game.join', {
+        name,
+    });
+
+    mage.logger.debug(state.actorId, name);
 }

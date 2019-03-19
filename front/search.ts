@@ -54,8 +54,8 @@ export async function updateOpenGames() {
         const text = document.createElement('span') as HTMLSpanElement;
 
         function genClick(name: string): () => void {
-            return () => {
-                console.log('Joining ' + name);
+            return async () => {
+                await mage.game.join(name);
             };
         }
 

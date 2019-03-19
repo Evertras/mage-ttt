@@ -34,7 +34,7 @@ logging:
     server:
         # Log to the terminal (hurts performance, not recommended in production)
         terminal:
-            channels: ">=verbose"
+            channels: ">=debug"
             config:
                 # Themes enable colors
                 theme: default

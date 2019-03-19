@@ -15,6 +15,8 @@ declare module 'mage-sdk-js' {
     function configure(cb: (err: Error) => Promise<void>): void;
     function setupModule(name: string, module: any): void;
 
+    let eventManager: any;
+
     module players {
         function register(username: string, password: string): Promise<any>;
         function login(username: string, password: string): Promise<any>;
@@ -23,9 +25,10 @@ declare module 'mage-sdk-js' {
 
     module game {
         function create(name?: string): Promise<any>;
-        function del(name?: string): Promise<any>;
+        function del(name: string): Promise<any>;
         function getOpen(): Promise<IGameMeta[]>;
         function getActive(): Promise<IGameMeta[]>;
+        function join(name: string): Promise<any>;
     }
 
     module session {

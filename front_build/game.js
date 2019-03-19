@@ -168,6 +168,10 @@ window.onload = async () => {
             console.error(err);
             return;
         }
+        console.debug(mage);
+        mage.eventManager.on('game.join', (_, data) => {
+            console.log('Joined!', data.name);
+        });
         await mage.setupModule('session', __webpack_require__(/*! mage-sdk-js.session */ "./node_modules/mage-sdk-js.session/index.js"));
         await states_1.adjustVisibility(states_1.State.Loaded);
     });
@@ -250,8 +254,8 @@ async function updateOpenGames() {
         const button = document.createElement('button');
         const text = document.createElement('span');
         function genClick(name) {
-            return () => {
-                console.log('Joining ' + name);
+            return async () => {
+                await mage.game.join(name);
             };
         }
         button.onclick = genClick(g.gameId);

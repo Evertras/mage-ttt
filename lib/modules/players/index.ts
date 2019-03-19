@@ -5,6 +5,7 @@ import { IPlayerData } from './playerData';
 export async function register(state: mage.core.IState, username: string, password: string) {
     const options: mage.auth.IAuthOptions = {
         acl: ['user'],
+        userId: username,
     };
 
     const r = promisify(mage.auth.register);
@@ -16,23 +17,17 @@ export async function register(state: mage.core.IState, username: string, passwo
         Losses: 0,
     });
 
-    mage.logger.debug('User ID created: ', id);
+    mage.logger.debug('User ID created:', id);
 
     await login(state, username, password);
 
-    mage.logger.debug('Logged in!');
+    mage.logger.debug('Logged in:', id);
 }
 
 export async function login(state: mage.core.IState, username: string, password: string) {
     const l = promisify(mage.auth.login);
 
     await l(state, username, password);
-
-    if (!state.session) {
-        throw new Error('No session on state');
-    }
-
-    state.session.meta.username = username;
 
     mage.logger.debug('Logged in!');
 }

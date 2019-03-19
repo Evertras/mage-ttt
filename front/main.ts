@@ -17,6 +17,12 @@ window.onload = async () => {
             return;
         }
 
+        console.debug(mage);
+
+        mage.eventManager.on('game.join', (_: any, data: any) => {
+            console.log('Joined!', data.name);
+        });
+
         await mage.setupModule('session', require('mage-sdk-js.session'));
 
         await adjustVisibility(State.Loaded);
