@@ -1,6 +1,6 @@
 import * as mage from 'mage-sdk-js';
 import { setupLoginButtons } from './login';
-import { setupSearchButtons } from './search';
+import { setupSearchButtons, updateOpenGames } from './search';
 import { adjustVisibility, State } from './states';
 
 mage.setEndpoint('http://localhost:8080');
@@ -21,6 +21,7 @@ window.onload = async () => {
 
         mage.eventManager.on('game.join', (_: any, data: any) => {
             console.log('Joined!', data.name);
+            updateOpenGames();
         });
 
         await mage.setupModule('session', require('mage-sdk-js.session'));

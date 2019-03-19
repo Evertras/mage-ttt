@@ -171,6 +171,7 @@ window.onload = async () => {
         console.debug(mage);
         mage.eventManager.on('game.join', (_, data) => {
             console.log('Joined!', data.name);
+            search_1.updateOpenGames();
         });
         await mage.setupModule('session', __webpack_require__(/*! mage-sdk-js.session */ "./node_modules/mage-sdk-js.session/index.js"));
         await states_1.adjustVisibility(states_1.State.Loaded);

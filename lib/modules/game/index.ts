@@ -3,6 +3,7 @@ import { promisify } from 'util';
 import { TicTacToe } from '../../game/tictactoe';
 
 const gameTopic = 'game';
+const playerNone = '<@@NONE@@#>';
 
 interface IGameIndex extends mage.archivist.IArchivistIndex {
     gameId: string;
@@ -40,7 +41,7 @@ export async function createGame(state: mage.core.IState, name: string) {
         <IGameIndex> {
             gameId: ttt.getId(),
             playerX: state.actorId,
-            playerO: '',
+            playerO: playerNone,
         }, ttt);
 }
 
@@ -72,7 +73,7 @@ export async function getOpen(state: mage.core.IState) {
 
     const listGame = promisify(state.archivist.list.bind(state.archivist, gameTopic));
 
-    const existing = await listGame({ playerO: '' }) as IGameIndex[];
+    const existing = await listGame({ playerO: playerNone }) as IGameIndex[];
 
     return existing;
 }
@@ -88,9 +89,11 @@ export async function getActive(state: mage.core.IState) {
 
     const listGame = promisify(state.archivist.list.bind(state.archivist, gameTopic));
 
-    const existing = await listGame({ playerX: state.actorId }) as IGameIndex[];
+    const existingX = await listGame({ playerX: state.actorId }) as IGameIndex[];
+    const existingO = await listGame({ playerO: state.actorId }) as IGameIndex[];
 
-    return existing.filter((g) => g.playerO !== '');
+    return existingX.filter((g) => g.playerO !== playerNone)
+                    .concat(existingO);
 }
 
 export async function join(state: mage.core.IState, name: string) {
@@ -122,9 +125,11 @@ export async function join(state: mage.core.IState, name: string) {
         <IGameIndex> { gameId: name, playerX: gameIndex.playerX, playerO: state.actorId },
         gameData);
 
-    state.emit(state.actorId, 'game.join', {
+    state.archivist.del(gameTopic, gameIndex);
+
+    mage.logger.debug(gameIndex.gameId, gameIndex.playerX, gameIndex.playerO);
+
+    state.emit([gameIndex.playerX, state.actorId], 'game.join', {
         name,
     });
-
-    mage.logger.debug(state.actorId, name);
 }
