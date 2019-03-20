@@ -18,4 +18,10 @@ server:
         expose: "http://127.0.0.1:8080/"
         bind: "http://127.0.0.1:8080"
     shutdownGracePeriod: 1
+    serviceDiscovery:
+        engine: single
+    mmrp:
+        bind:
+            host: "*"
+            port: 9500
 

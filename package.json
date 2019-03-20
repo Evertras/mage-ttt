@@ -30,7 +30,8 @@
     "@types/node": "^8.10.44",
     "mage": "1.6.0",
     "ts-node": "^8.0.3",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "zmq": "^2.15.3"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
