@@ -16,3 +16,4 @@ vagrant_ansible_inventory_*
 Vagrantfile
 check.txt
 .digest-cache.json
+.vscode
