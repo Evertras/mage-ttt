@@ -9,7 +9,7 @@
   "scripts": {
     "help": "     echo 'Display help information (this screen)' &&   npm run",
     "mage": "     echo 'Run the mage binary'  &&                     ts-mage",
-    "develop": "  echo 'Run MAGE in development mode' &&             npm run mage",
+    "develop": "  echo 'Run MAGE in development mode' &&             ts-mage-console",
     "start": "    echo 'Start MAGE as a daemon' &&                   ts-mage start",
     "stop": "     echo 'Stop the MAGE daemon' &&                     ts-mage stop",
     "restart": "  echo 'Restart the MAGE daemon' &&                  ts-mage restart",
@@ -37,6 +37,7 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "chai": "^4.2.0",
+    "mage-console": "^0.4.0",
     "mage-sdk-js": "^1.1.0",
     "mage-sdk-js.session": "^0.1.0",
     "mocha": "^6.0.2",
